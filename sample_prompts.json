@@ -1,0 +1,105 @@
+{
+    "EXAMPLES": {
+        "Beginner": [
+            {
+                "follow_up_question": "What experience do you have with machine learning?",
+                "user_response": "I have never used ML, but I'm interested in learning.",
+                "expected_follow_up": "That's great! What aspect of AI/ML interests you the most?"
+            },
+            {
+                "follow_up_question": "Do you know any programming languages for AI?",
+                "user_response": "I have basic knowledge of Python but haven’t used it for AI yet.",
+                "expected_follow_up": "Good! Would you like to explore how Python is used in AI?"
+            },
+            {
+                "follow_up_question": "What interests you about AI/ML?",
+                "user_response": "I'm curious about AI, but I don’t have any experience.",
+                "expected_follow_up": "That’s great! AI is a vast field. Are there any real-world AI applications that fascinate you?"
+            },
+            {
+                "follow_up_question": "Have you worked with any AI tools?",
+                "user_response": "No, but I have heard of TensorFlow and Scikit-Learn.",
+                "expected_follow_up": "Good start! TensorFlow and Scikit-Learn are widely used. Would you be interested in learning Python for AI development?"
+            },
+            {
+                "follow_up_question": "What do you know about machine learning?",
+                "user_response": "I have heard about it but don't really understand how it works.",
+                "expected_follow_up": "No problem! Machine learning is about teaching computers to recognize patterns. Would you like to start with basic concepts like supervised and unsupervised learning?"
+            },
+            {
+                "follow_up_question": "Do you have any programming experience?",
+                "user_response": "I know some Python but haven’t used it for AI.",
+                "expected_follow_up": "That’s a great start! Python is widely used in AI. Would you like to learn how to use Python libraries like NumPy and Pandas for data processing?"
+            },
+            {
+                "follow_up_question": "What aspect of AI interests you most?",
+                "user_response": "I want to learn how AI is used in real-world applications.",
+                "expected_follow_up": "That’s fantastic! AI is used in recommendation systems, self-driving cars, and more. Are you interested in a specific area like computer vision or natural language processing?"
+            }
+        ],
+        "Intermediate": [
+            {
+                "follow_up_question": "What kind of AI/ML projects have you worked on?",
+                "user_response": "I created a spam detection classifier using Naive Bayes.",
+                "expected_follow_up": "Nice! What dataset did you use to train your classifier?"
+            },
+            {
+                "follow_up_question": "How do you prevent overfitting in ML models?",
+                "user_response": "I use dropout and L2 regularization.",
+                "expected_follow_up": "Good approach! Have you tried early stopping as well?"
+            },
+            {
+                "follow_up_question": "Can you describe a machine learning project you’ve worked on?",
+                "user_response": "I built a simple spam classifier using Scikit-Learn.",
+                "expected_follow_up": "Awesome! Did you use a specific algorithm like Naive Bayes or Logistic Regression?"
+            },
+            {
+                "follow_up_question": "Have you deployed any machine learning models?",
+                "user_response": "I have trained models but haven’t deployed them yet.",
+                "expected_follow_up": "That’s great! Would you be interested in learning about model deployment tools like Flask or FastAPI?"
+            },
+            {
+                "follow_up_question": "How do you evaluate machine learning models?",
+                "user_response": "I use accuracy, precision, recall, and F1-score.",
+                "expected_follow_up": "Excellent! Have you ever encountered issues like imbalanced datasets, and if so, how did you handle them?"
+            },
+            {
+                "follow_up_question": "What kind of AI/ML projects have you worked on?",
+                "user_response": "I created a sentiment analysis model using NLP techniques.",
+                "expected_follow_up": "That’s exciting! Did you use pre-trained models like BERT, or did you build your own model from scratch?"
+            }
+        ],
+        "Advanced": [
+            {
+                "follow_up_question": "What is your experience with ML model deployment?",
+                "user_response": "I have deployed models using Docker, Kubernetes, and AWS SageMaker.",
+                "expected_follow_up": "That’s impressive! What’s your preferred method for scaling ML models in production?"
+            },
+            {
+                "follow_up_question": "Have you implemented reinforcement learning?",
+                "user_response": "Yes, I have built RL agents using OpenAI Gym and DQN algorithms.",
+                "expected_follow_up": "Awesome! Have you experimented with policy gradient methods like PPO?"
+            },
+            {
+                "follow_up_question": "Can you tell me about your AI/ML experience?",
+                "user_response": "I have developed end-to-end ML pipelines for production environments.",
+                "expected_follow_up": "Impressive! What tools do you use for MLOps, such as MLflow or Kubeflow?"
+            },
+            {
+                "follow_up_question": "Have you worked with reinforcement learning?",
+                "user_response": "Yes, I have built RL agents using OpenAI Gym.",
+                "expected_follow_up": "Awesome! Have you experimented with deep reinforcement learning techniques like DQN or PPO?"
+            },
+            {
+                "follow_up_question": "What is your experience with ML model deployment?",
+                "user_response": "I have deployed models using Docker, Kubernetes, and AWS SageMaker.",
+                "expected_follow_up": "Great! Have you also worked with edge deployment, such as TensorFlow Lite for mobile and embedded systems?"
+            },
+            {
+                "follow_up_question": "What advanced ML techniques have you used?",
+                "user_response": "I have worked with GANs and transformers.",
+                "expected_follow_up": "Fantastic! Have you used GANs for image generation or another domain?"
+            }
+        ]
+    }
+}
