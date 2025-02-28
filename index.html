@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+  <title>AI Learning Assistant</title>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const firstTimeUI = document.getElementById("firstTimeUI");
+      const chatContainer = document.getElementById("chatContainer");
+      const conversation = document.getElementById("conversation");
+      const sendButton = document.getElementById("sendBtn");
+      const darkModeToggle = document.getElementById("darkModeToggle");
+      const userInputField = document.getElementById("userInput");
+      const submitBtn = document.getElementById("submitBtn");
+      let chatInput;
+
+      function switchToChatMode(userMessage) {
+        if (!userMessage) return;
+
+        firstTimeUI.classList.add("hidden");
+        chatContainer.classList.remove("hidden");
+
+        chatInput = document.getElementById("chatInput");
+
+        addMessage(userMessage, "user");
+
+        sendButton.addEventListener("click", submitInput);
+        chatInput.addEventListener("keypress", function (event) {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            submitInput();
+          }
+        });
+
+        processMessage(userMessage);
+      }
+
+      function addMessage(text, sender, isHtml = false) {
+        if (!text) return;
+
+        const messageElement = document.createElement("div");
+        messageElement.classList.add("message", sender);
+
+        if (isHtml) {
+          messageElement.innerHTML = text;
+        } else {
+          messageElement.innerText = text;
+        }
+
+        conversation.appendChild(messageElement);
+        conversation.scrollTop = conversation.scrollHeight;
+      }
+
+      function showTypingIndicator(show) {
+        let typingIndicator = document.getElementById("typingIndicator");
+        if (!typingIndicator) {
+          typingIndicator = document.createElement("p");
+          typingIndicator.id = "typingIndicator";
+          typingIndicator.className = "typing-indicator text-gray-500 italic";
+          typingIndicator.innerText = "💬 AI is typing...";
+          conversation.appendChild(typingIndicator);
+        }
+        typingIndicator.style.display = show ? "block" : "none";
+      }
+
+      async function processMessage(userMessage) {
+        showTypingIndicator(true);
+
+        const requestData = { input: userMessage, isPreset: true };
+
+        const response = await fetch("/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(requestData),
+        });
+
+        const data = await response.json();
+        showTypingIndicator(false);
+
+        if (data.question) {
+          addMessage(data.question, "bot");
+        } else if (data.result) {
+          addMessage(`✅ ${data.result}`, "bot");
+
+          if (data.summary) {
+            addMessage(`<strong>Summary:</strong> ${data.summary}`, "bot", true);
+          }
+
+          // ✅ Fix: Ensure Key Elements are displayed
+          if (data.key_elements && Array.isArray(data.key_elements)) {
+            const keyElementsHtml = `<strong>Key Elements:</strong> <ul class="list-disc pl-5">${data.key_elements.map(e => `<li>${e}</li>`).join("")}</ul>`;
+            addMessage(keyElementsHtml, "bot", true);
+          }
+
+          // ✅ Fix: Ensure Score Breakdown is displayed
+          // if (data.score_breakdown && Array.isArray(data.score_breakdown)) {
+          //   const scoreBreakdownHtml = `<strong>Score Breakdown:</strong> <pre class="bg-gray-200 p-2 rounded">${JSON.stringify(data.score_breakdown, null, 2)}</pre>`;
+          //   addMessage(scoreBreakdownHtml, "bot", true);
+          // }
+          if (data.score_breakdown && Array.isArray(data.score_breakdown)) {
+            let scoreBreakdownHtml = `<strong>Score Breakdown:</strong> <div class="bg-gray-100 p-3 rounded-md border-l-4 border-gray-500">`;
+            data.score_breakdown.forEach((entry, index) => {
+              scoreBreakdownHtml += `
+            <div class="mb-2 p-2 bg-gray-50 border border-gray-300 rounded">
+                <p><strong>Response ${index + 1}:</strong> ${entry.response}</p>
+                <p><strong>Score:</strong> ${entry.score}</p>
+                <p><strong>Reasoning:</strong> ${entry.reasoning}</p>
+            </div>
+        `;
+            });
+            scoreBreakdownHtml += `</div>`;
+            addMessage(scoreBreakdownHtml, "bot", true);
+          }
+        }
+      }
+
+      function submitInput() {
+        const userInput = chatInput.value.trim();
+        if (!userInput) return;
+
+        addMessage(userInput, "user");
+        chatInput.value = "";
+        processMessage(userInput);
+      }
+
+      submitBtn.addEventListener("click", function () {
+        const userMessage = userInputField.value.trim();
+        if (!userMessage) return;
+        switchToChatMode(userMessage);
+      });
+
+      userInputField.addEventListener("keypress", function (event) {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          const userMessage = userInputField.value.trim();
+          if (!userMessage) return;
+          switchToChatMode(userMessage);
+        }
+      });
+
+      document.querySelectorAll(".preset-btn").forEach((button) => {
+        button.addEventListener("click", function () {
+          const selectedTopic = this.innerText;
+          switchToChatMode(selectedTopic);
+        });
+      });
+    });
+  </script>
+
+  <style>
+    .message { padding: 10px; border-radius: 10px; margin: 5px; max-width: 80%; }
+    .bot { background-color: #e3c2c2; align-self: flex-start; }
+    .user { background-color: #007bff; color: white; align-self: flex-end; }
+  </style>
+</head>
+<body class="bg-gray-100 text-foreground p-6 min-h-screen flex flex-col items-center justify-center w-screen">
+
+  <button id="darkModeToggle" class="absolute top-5 right-5 bg-gray-200 dark:bg-gray-800 p-2 rounded">🌓</button>
+
+  <div id="firstTimeUI" class="flex flex-col items-center w-full max-w-2xl">
+    <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-red-500 to-violet-500 mb-6">
+      What’s on your mind?
+    </h1>
+    <div class="flex items-center space-x-2 bg-white p-2 rounded-lg shadow-md w-full" style="border-radius: 20px;">
+      <input id="userInput" type="text" placeholder="Ask anything in AI/ML" class="flex-grow p-3 border-none rounded-lg focus:outline-none" />
+      <button id="submitBtn" class="bg-gray-500 text-white px-5 py-3 rounded-lg hover:bg-blue-600 transition">
+        Search
+      </button>
+    </div>
+
+    <!-- <div class="flex justify-center space-x-4 mt-4">
+      <button class="preset-btn p-3 bg-gray-300 text-black rounded-lg shadow-md hover:bg-gray-400 transition">Algorithms</button>
+      <button class="preset-btn p-3 bg-gray-300 text-black rounded-lg shadow-md hover:bg-gray-400 transition">Statistics</button>
+      <button class="preset-btn p-3 bg-gray-300 text-black rounded-lg shadow-md hover:bg-gray-400 transition">NLP</button>
+    </div> -->
+  </div>
+
+  <div id="chatContainer" class="hidden flex flex-col w-full max-w-6xl bg-white p-6 rounded-lg shadow-md h-screen">
+    <div id="conversation" class="flex flex-col h-full overflow-y-auto bg-gray-50 p-4 rounded-md"></div>
+    <div id="inputContainer" class="mt-4 flex">
+      <input type="text" id="chatInput" placeholder="Type your response..." class="flex-grow p-3 border rounded-lg focus:outline-none" />
+      <button id="sendBtn" class="ml-2 p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">Send</button>
+    </div>
+  </div>
+
+</body>
+</html>
